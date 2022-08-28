@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Choose your weapon</title>
+    <style>
+        html {
+            font-family: Arial;
+            background-color: black;
+            color: lightgrey;
+            margin: auto;
+        }
+        body {
+            max-width: 1000px;
+            margin: auto;
+        }
+        h1,h2, .subheading p,.currentScores,.subheading1{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+
+        }
+        .playerChoices input[type = 'radio'] 
+        {  
+            opacity: 0;
+            position: fixed;
+            width: 0;
+        }
+        .playerChoices label {
+        display:inline-flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3px;
+        margin: 3px;
+        border:1px solid #e0e0e0;
+        border-radius:6px;
+        width: 10em;
+        height: 10em;
+        }
+
+        .playerChoices{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .subheading1{
+            font-size: 40px;
+        }
+
+        .choiceimage {
+            display: flex;
+            justify-content: center;
+            height:60%;
+            width:60%;
+        }
+        .playerNamesM ,.currentSelectionsM, .currentScores,.FinalWinner {
+            margin:auto;
+            display: flex;
+            width: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        
+        .playerNames,.currPlayerSelection,.currCompSelection,.currCompScore,.currPlayerScore{
+            display:  flex;
+            width: 50%;
+            font-size: 30px;
+            justify-content: center;
+        }
+
+        .playerChoices input[type = 'radio']:checked + label {background-color:lightgrey;}
+    </style>
+  </head>
+  <body>
+    <h1>Rock Paper Scissors</h1>
+    <div class="subheading"><h2>Choose your weapon!</h2>
+    <p>First to score 5 points wins the game</p></div>
+    
+    <div class ="currentSelectionsM">
+    <div class ="currPlayerSelection"></div>
+    <div class ="currCompSelection"></div></div>
+    <div class= "currentScores"><div class ="currPlayerScore">You: </div>
+    <div class ="currCompScore">Computer: </div></div>
+
+
+    <div class ="subheading1">Take your Pick!!</div>
+    <div class="playerChoices">
+            <input type="radio" name ="pChoices" value="rock" id ="rock"><label for ="rock"><div class= "choiceimage"><img src="rock_1.png"></div></label>
+        
+            <input type="radio" name ="pChoices" value="paper" id ="paper"><label for ="paper"><div class= "choiceimage"><img src="paper_1.png"></div></label>
+        
+            <input type="radio" name ="pChoices" value="sCIssors" id ="scissors"><label for ="scissors"><div class= "choiceimage"><img src="scissors_1.png"></div></label>
+      </div>
+      <div class = "winlossmessage"></div>
+      <div class = "PlayerScore"></div>
+      <div class = "FinalWinner"></div>
+  </body>
+  <script>
+    let compChoice;
+    let compScore = 0;
+    let playScore = 0;
+    var currPlayerSelection = document.querySelector('.currPlayerSelection');
+    var currCompSelection = document.querySelector('.currCompSelection')
+    var allPChoices = document.querySelectorAll('input[name = "pChoices"]');
+    var winlossmessage = document.querySelector('.winlossmessage');
+    var currCompScore = document.querySelector('.currCompScore');
+    var currPlayerScore = document.querySelector('.currPlayerScore');
+    var PlayerScore = document.querySelector('.PlayerScore');
+    var FinalWinner = document.querySelector('.FinalWinner');
+    var subheading1= document.querySelector('.subheading1');
+    var playerChoices = document.querySelector ('.playerChoices');
+    var playerGraphicalChoice = document.createElement('img');
+    var compGraphicalChoice = document.createElement('img');
+    var reset = document.createElement('button');
+    currCompSelection.textContent = "❔";
+    currPlayerSelection.textContent = "❔";
+    reset.innerHTML= "Start new Game";
+    
+    for (const currPChoice of allPChoices){
+        currPChoice.addEventListener('click',playGame);
+    }
+    function playGame(){
+    currCompSelection.textContent = "";
+    currPlayerSelection.textContent = "";
+    playerGraphicalChoice.src = this.value+"_1.png";
+    currPlayerSelection.appendChild(playerGraphicalChoice);
+    var compChoice = getComputerChoice();
+    compGraphicalChoice.src = compChoice+"_1.png";
+    currCompSelection.appendChild(compGraphicalChoice);
+    if (compChoice.toUpperCase() == this.value.toUpperCase()){
+        subheading1.textContent = "Its a tie!";
+    } else if ((compChoice.toUpperCase() == "ROCK" && this.value.toUpperCase() =="SCISSORS")|| (compChoice.toUpperCase() == "PAPER" && this.value.toUpperCase() == "ROCK") || (compChoice.toUpperCase() == "SCISSORS" && this.value.toUpperCase()== "PAPER")){
+        subheading1.style.display = "flex";
+        subheading1.textContent = "Computer Wins this round!";
+        compScore++
+        if(compScore ===5){
+            endGame();
+        }
+    } else { 
+        subheading1.style.display = "flex";
+        subheading1.textContent = "Congratulations you win this round!!";
+        playScore++
+        if(playScore ===5){
+            endGame();
+        }
+    }
+    currCompScore.textContent = "Computer: "+ compScore;
+    currPlayerScore.textContent = "You: "+ playScore;
+
+}
+
+    function getComputerChoice(){
+
+        let computerChoice =""
+        let a = Math.floor(Math.random() * 3) + 1;
+        if (a == 1){
+            computerChoice ="Rock";
+    } else if (a == 2){
+            computerChoice = "Paper";
+
+    } else {computerChoice = "Scissors"};
+
+    return computerChoice;
+}
+    function endGame(){
+        if (playScore === 5){
+            currPlayerScore.textContent = "You: "+ playScore;
+            subheading1.style.display = "flex";
+            subheading1.textContent = "Congratulations you are the Final WINNER!";
+        } else {
+            currCompScore.textContent = "Computer: "+ compScore;
+            subheading1.style.display = "flex";
+            subheading1.textContent = "COMPUTER is the Final WINNER!";
+        }
+        playerChoices.style.display = "none";
+        winlossmessage.style.display = "none";
+        
+        FinalWinner.style.display = "flex";
+        FinalWinner.append(reset);
+        reset.style.display = "flex";
+    }
+    reset.addEventListener('click',resetGame);
+
+    function resetGame() {
+
+        currCompSelection.textContent = "❔";
+        currPlayerSelection.textContent = "❔";
+        playerChoices.style.display = "flex";
+        winlossmessage.style.display = "flex";
+        compScore = 0;
+        playScore = 0;
+        currCompScore.textContent = "Computer: ";
+        currPlayerScore.textContent = "You: ";
+        FinalWinner.style.display = "none";
+        winlossmessage.style.display = "flex";
+        subheading1.textContent = "Take Your Pick";
+        for (const currPChoice of allPChoices){
+            currPChoice.checked = false;
+        }
+    }
+  </script>
